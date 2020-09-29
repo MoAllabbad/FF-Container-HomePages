@@ -1,0 +1,30 @@
+{
+  "name": "Container Default Pages",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Specify a default page for each container.",
+  "homepage_url": "https://duckduckgo.com",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "contextualIdentities",
+    "storage",
+    "tabs"
+  ],
+  "background": {
+    "page": "js/background/index.html"
+  },
+  "applications": {
+    "gecko": {
+      "id": "@testpilot-container-default-pages",
+      "strict_min_version": "67.0"
+    }
+  }
+}
