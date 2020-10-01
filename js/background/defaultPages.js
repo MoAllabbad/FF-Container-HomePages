@@ -90,11 +90,11 @@ containerDefaultPages = {
 
   async getAllDefaultPages() {
     let identities = await browser.contextualIdentities.query({});
-    identities.forEach( async identity => {
+    for (identity of identities){
       identity.newTabUrl = await this.storageArea.get(identity.cookieStoreId);
-    }); // TODO: currently all identities are set to hardcoded url, so look into the case when url has not been set
-        // in that case, it is currently set to false by the called function.
-    console.log(identities)
+    }
+    // TODO: currently all identities are set to hardcoded url, so look into the case when url has not been set
+    // in that case, it is currently set to false by the called function.
     return identities;
   },
 
@@ -121,10 +121,13 @@ containerDefaultPages = {
 
     // this temporarily hardcoded
     this.setDefaultUrls();
-    this.getAllDefaultPages();
+    // this.getAllDefaultPages();
 
   }
 };
 
 containerDefaultPages.init();
 
+// .catch((e) => {
+//   throw e;
+// });
