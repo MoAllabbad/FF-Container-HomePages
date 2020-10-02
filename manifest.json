@@ -3,10 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Specify a default page for each container.",
-  "homepage_url": "https://duckduckgo.com",
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  },
+  "homepage_url": "https://github.com/Allabbad/FF-Container-Default-Pages",
   "options_ui": {
     "page": "options.html",
     "browser_style": true

@@ -37,6 +37,7 @@ containerDefaultPages = {
     async get(cookieStoreId) {
       const storeKey = this.getContainerStoreKey(cookieStoreId);
       const storageResponse = await this.area.get([storeKey]); // if no key, undefined is returned? https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/get
+
       if (storageResponse && storeKey in storageResponse) {
         return storageResponse[storeKey];
       }
@@ -86,9 +87,21 @@ containerDefaultPages = {
     //   return await this.storageArea.get(cookieStoreId);
     // }
     // return false; // TODO: verify api
+    return await this.storageArea.get(cookieStoreId);
   },
 
   async getAllDefaultPages() {
+    let identities = await browser.contextualIdentities.query({});
+    let defaultUrls = {};
+    for (identity of identities){
+      defaultUrls[identity.cookieStoreId] = await this.storageArea.get(identity.cookieStoreId);
+    }
+    // TODO: currently all identities are set to hardcoded url, so look into the case when url has not been set
+    // in that case, it is currently set to false by the called function.
+    return defaultUrls;
+  },
+
+  async loadIdentitiesWithDefaultPages() {
     let identities = await browser.contextualIdentities.query({});
     for (identity of identities){
       identity.newTabUrl = await this.storageArea.get(identity.cookieStoreId);
@@ -100,7 +113,7 @@ containerDefaultPages = {
 
   // this is hardcoded for initial testing
   async setDefaultUrls() {
-    const hardCodedUrlTest = "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions";
+    const hardCodedUrlTest = "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/";
     let identities = await browser.contextualIdentities.query({});
     identities.forEach(identity => {
       this.storageArea.set(identity.cookieStoreId, hardCodedUrlTest);
@@ -126,7 +139,7 @@ containerDefaultPages = {
   }
 };
 
-containerDefaultPages.init();
+// containerDefaultPages.init();
 
 // .catch((e) => {
 //   throw e;
