@@ -2,13 +2,24 @@
 
 const newTab = {
   isNewTab(tab){
-    // for the most part, checking the title is enough. Just in the unlikely case where a page
-    // on the web is titled "New Tab", then the second check of the url should take care of 
-    // that false positve. However, checking only the url is not enough as the tab info is not
-    // likely to have the final url when the onCreated event is fired, which is noted here: 
+    // checking openerTabId this way prevents loading default url to links that are directed to new tabs
+    // such as "Open in New Tab". Otherwise, checking only the tab title and url is not enough as both 
+    // will keep updating while the tab status changes from "loading" to "complete".
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onCreated
-    return tab.title == "New Tab"
-           && (tab.url == "about:newtab" || tab.url == "about:blank");
+    // We could wait for the tab to finish loading and check the title and the url but that's time wasted.
+    // There yet to exist a legitimate case where checking openerTabId does not work. 
+    // known issue: this won't work in case of opening "about:newtab" link as "Open in New Tab"
+    // but arguably that's not a real use case.
+    let isNew = tab.openerTabId === undefined;
+    // TODO?:: is there a case where a newly created tab is new but does not have a parent tab?!
+    // if (tab.status == "complete" &&
+    //    !(tab.title == "New Tab") || 
+    //    (tab.url == "about:newtab" &&
+    //     tab.url == "about:blank")){
+    //       isNew = false;
+    // }
+    // TODO?: may add onUpdated listener here for edge case
+    return isNew;
   },
   async onCreated(tab){
     if (newTab.isNewTab(tab)){
@@ -27,17 +38,3 @@ const newTab = {
 }
 
 newTab.init()
-
-// browser.tabs.onCreated.addListener(tab=> {
-//   console.log("hello"); 
-//   if (tab.title == "New Tab" && tab.url == "about:newtab"){
-//     browser.tabs.update(tab.tabId, {url: "https://duckduckgo.com"})
-//   }
-// });
-
-// function handleCreated(tab) {
-//   console.log("background newTab: tab" + tab)
-//   browser.tabs.update(tab.tabId, {url: "https://duckduckgo.com"})
-// }
-
-// browser.tabs.onCreated.addListener(handleCreated);
