@@ -1,67 +1,89 @@
 
-async function setupContainerTable () {
-  // browser.runtime.sendMessage({ method: "loadIdentities" });
-  identities = await browser.contextualIdentities.query({}) // .then(m=>console.log(m))
-  const identitiesTable = document.getElementById("identities");
-  const fragment = document.createDocumentFragment();
+const Options = {
 
-  // for (const identity of identities){
-  //       // tr.appendChild(hr);
+  identities: [],
+  launched: false,
 
-  //   const tr = document.createElement('tr');
-  //   const tdIcon = document.createElement('td');
-  //   const tdName = document.createElement('td');
+  async setContainerDefaultPage(url, cookieStoreId) {
+    browser.runtime.sendMessage({
+      method: "setDefaultPage",
+      url: url, 
+      cookieStoreId: cookieStoreId
+    });
+  },
 
-  //   const svg = document.createElement('svg');
-  //   const use = document.createElement('use');
-  //   use.setAttribute("href", identity.iconUrl);
-  //   use.setAttribute("fill", identity.color); // fill color is not accurate by name, could use a func with macros
+  async getContainerDefaultPage(cookieStoreId) {
+    return await browser.runtime.sendMessage({
+    method: "getDefaultPage",
+    cookieStoreId: cookieStoreId
+    });
+  },
 
-  //   svg.appendChild(use);
-  //   tdIcon.appendChild(svg);
-  //   // tr.appendChild(img);
-  //   const name = document.createTextNode(identity.name);
-  //   // tr.appendChild(name);
-  //   // fragment.appendChild(tr);
-  //   tdName.appendChild(name);
+  async setupContainerTable () {
+    const identitiesTable = document.getElementById("identities");
+    const fragment = document.createDocumentFragment();
 
-  //   tr.appendChild(tdIcon);
-  //   tr.appendChild(tdName);
-  //   fragment.appendChild(tr);
- 
+    for (const identity of this.identities){
+      const containerFormId = Utils.containerFormId(identity.cookieStoreId);
+      const containerInputId = Utils.containerInputId(identity.cookieStoreId);
 
-  // }
-  for (const identity of identities){
-    const tr = document.createElement('tr');
-    // tr.classList.add("menu-item");
-    const td = document.createElement('td');
+      const tr = document.createElement('tr');
+      // tr.classList.add("menu-item");
+      const td = document.createElement('td');
 
-    td.innerHTML = Utils.escaped`
-        <div class="menu-item-name">
-          <div class="menu-icon">
-            <div class="usercontext-icon"
-              data-identity-icon="${identity.icon}"
-              data-identity-color="${identity.color}">
+      td.innerHTML = Utils.escaped`
+          <div class="menu-item-name">
+            <div class="menu-icon">
+              <div class="usercontext-icon"
+                data-identity-icon="${identity.icon}"
+                data-identity-color="${identity.color}">
+              </div>
             </div>
-          </div>
-          <span class="menu-text">${identity.name}</span>
-          <span class="menu-box">
-          <input type="url" placeholder="https://example.com">
-          </span>
-        </div>`;
-    
-    tr.appendChild(td);
-  
-    fragment.appendChild(tr);
-    // const hr = document.createElement('hr');
-    // fragment.appendChild(hr);
+            <span class="menu-text">${identity.name}</span>
+            <span class="menu-box">
+              <form id="${containerFormId}">
+                <input type="url" placeholder="https://example.com" id="${containerInputId}">
+              </form>
+            </span>
+          </div>`;
+      
+      tr.appendChild(td);
+      fragment.appendChild(tr);
+
+      this.getContainerDefaultPage(identity.cookieStoreId)
+        .then((contextUrl)=> document.getElementById(containerInputId).value = contextUrl? contextUrl : "")
+        .catch((contextUrl)=> document.getElementById(containerInputId).value = contextUrl? contextUrl : "error..");
+    }
+    identitiesTable.appendChild(fragment);
+      // identitiesTable.appendChild(hr);
+  },
+
+  addUrlInputListeners(){
+    for (const identity of this.identities){
+      const containerFormId = Utils.containerFormId(identity.cookieStoreId);
+      const defaultPageForm = document.getElementById(containerFormId);
+      const containerInputId = Utils.containerInputId(identity.cookieStoreId);
+      // TODO?: additional url validity could be done here
+      defaultPageForm.addEventListener("submit", () => {
+        const defaultPageUrl = document.getElementById(containerInputId).value
+        this.setContainerDefaultPage(defaultPageUrl, identity.cookieStoreId);
+      });
+    }
+  },
+
+  async init(){
+    if (!this.launched){
+      this.identities = await browser.contextualIdentities.query({})
+      await this.setupContainerTable (); // await so listeners are added to existing elements
+      this.addUrlInputListeners();
+
+      this.launched = true; // TODO?: elementary way to prevent reloading
+      // currently still loads every time with white flash
+    }
 
   }
-  identitiesTable.appendChild(fragment);
-    // identitiesTable.appendChild(hr);
-
-
 }
 
-setupContainerTable ()
-// document.body.onload = setupContainerTable;
+Options.init();
+
+

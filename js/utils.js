@@ -1,8 +1,8 @@
 
 const Utils = {
 
-    /**
-   * Escapes any occurances of &, ", <, > or / with XML entities.
+  /**
+   * Escapes any occurrences of &, ", <, > or / with XML entities.
    *
    * @param {string} str
    *        The string to escape.
@@ -13,8 +13,7 @@ const Utils = {
     return String(str).replace(/[&"'<>/]/g, m => replacements[m]);
   },
 
-
-    /**
+  /**
    * A tagged template function which escapes any XML metacharacters in
    * interpolated values.
    *
@@ -36,6 +35,25 @@ const Utils = {
     }
 
     return result.join("");
-  }
+  },
 
+  /**
+   * Returns a string representing the HTML ID of the Form element
+   *
+   * @param {string} cookieStoreId
+   *        A string representing a container/contextualIdentity ID.
+   */
+  containerFormId(cookieStoreId){
+    return `CDP_Form_${cookieStoreId}`;
+  },
+
+  /**
+   * Returns a string representing the HTML ID of the Input element
+   *
+   * @param {string} cookieStoreId
+   *        A string representing a container/contextualIdentity ID.
+   */
+  containerInputId(cookieStoreId){
+    return `CDP_URL_${cookieStoreId}`;
+  }
 }
