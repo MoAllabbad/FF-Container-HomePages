@@ -11,7 +11,7 @@ const newTab = {
     // known issue: this won't work in case of opening "about:newtab" link as "Open in New Tab"
     // but arguably that's not a real use case.
     let isNew = tab.openerTabId === undefined;
-    // TODO?:: is there a case where a newly created tab is new but does not have a parent tab?!
+    // TODO?: is there a case where a newly created tab is new but does not have a parent tab?!
     // if (tab.status == "complete" &&
     //    !(tab.title == "New Tab") || 
     //    (tab.url == "about:newtab" &&
@@ -23,16 +23,17 @@ const newTab = {
   },
   async onCreated(tab){
     if (newTab.isNewTab(tab)){
-      const defaultUrl = await containerDefaultPages.getDefaultPage(tab.cookieStoreId)
-      browser.tabs.update(tab.tabId, {url: defaultUrl});
+      try{
+        const defaultUrl = await containerDefaultPages.getDefaultPage(tab.cookieStoreId)
+        if(defaultUrl){
+          browser.tabs.update(tab.tabId, {url: defaultUrl});
+        }
+      }catch(e){
+        console.log(e)
+      }
     }
   },
   init(){
-
-    // this makes sure container default pages are loaded before listening for new tabs
-    // TODO: this won't be needed once the hard-coded urls are removed 
-    containerDefaultPages.init(); 
-    
     browser.tabs.onCreated.addListener(this.onCreated);
   },
 }
