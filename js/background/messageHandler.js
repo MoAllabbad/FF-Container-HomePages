@@ -10,13 +10,16 @@ const messageHandler = {
         response = containerDefaultPages.getDefaultPage(m.cookieStoreId);
         break;
       case "setDefaultPage":
-        if(m.url === ""){
-          containerDefaultPages.removeDefaultPage(m.cookieStoreId);
-        }
-        // TODO: if (Utils.isValid(message.url)) 
-        // This should be implemented here so we will handle other extension's messages in this module
-        // else return message of invalid url to be displaid in the box
-        containerDefaultPages.setDefaultPage(m.url, m.cookieStoreId);
+        // TODO?: if (Utils.isValid(message.url)) 
+        // user input validity checks can be done in front end and external inputs can be checked below
+        // if the same level of check is done for both, then checking could be done here as this is the 
+        // first common api entry point. But if extra checks are needed for security on external inputs
+        // then separating is an option. 
+        // This could be a common point for validity check plus extra checks for external inputs but then
+        // some checks might be redundant. Plus moving validity check for user input to front end might 
+        // increase performance.
+        containerDefaultPages.setDefaultPage(m.cookieStoreId, m.url);
+        // TODO?: currently doesn't return anything. If set operation in defaultPages fails, nothing happens 
         break;
       case "loadIdentities":
         response = containerDefaultPages.getAllDefaultPages();
@@ -41,10 +44,13 @@ const messageHandler = {
       let response;
       switch (message.method) {
       case "getDefaultPage":
-        if(!(this.isValidcookieStoreId(message.cookieStoreId))){ // could be moved to Utils later
-          throw new Error("Invalid cookieStoreId from external extension message");
-        }
-        response = containerDefaultPages.getDefaultPage(message.url);
+        response = containerDefaultPages.getDefaultPage(message.cookieStoreId);
+        break;
+      case "getAllDefaultPages":
+        response = containerDefaultPages.getAllDefaultPages();
+        break;
+      case "loadIdentitiesWithDefaultPages":
+        response = containerDefaultPages.loadIdentitiesWithDefaultPages();
         break;
       // setting defaul urls is disabled until url validation is done
       // case "setDefaultPage":
@@ -57,13 +63,6 @@ const messageHandler = {
       }
       return response;
     });
-
-    if (browser.contextualIdentities.onRemoved) {
-      browser.contextualIdentities.onRemoved.addListener(({contextualIdentity}) => {
-        // remove from storega
-        // reload identities. // Maybe this is not needed as they will be reloaded again next time options is launched
-      });
-    }
 
   },
 
