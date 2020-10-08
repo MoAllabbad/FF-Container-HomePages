@@ -2,7 +2,7 @@ containerDefaultPages = {
   storageArea: {
     area: browser.storage.local,
 
-    // These are here to check later if there are inconsistinsies between exsiting identities and ones in store.
+    // These are here to check later if there are inconsistencies between exiting identities and ones in store. i.e garbage collection.
 
     // identityNumStoreKey: "CDP@@_numIdentitiesInStore",
 
@@ -41,12 +41,10 @@ containerDefaultPages = {
       if (storageResponse && storeKey in storageResponse) {
         return storageResponse[storeKey];
       }
-      return false; // TODO: verify api
+      return false;
     },
 
     set(cookieStoreId, data) {
-      // if (this.isValidUrl(url)){ // look further later into api design of where this verification should go
-      //   if (this.isCurrentlyUsedIdentity(cookieStoreId)){// look further later into api design of where this verification should go
       const storeKey = this.getContainerStoreKey(cookieStoreId);
       return this.area.set({
         [storeKey]: data
@@ -54,64 +52,62 @@ containerDefaultPages = {
     },
 
     async remove(cookieStoreId) {
-      // TODO: disabled util Utils is implemented
-      // const storeKey = this.getContainerStoreKey(cookieStoreId);
-      // return this.area.remove([storeKey]);
+      // TODO?: In case needed
     },
 
-    // async isCurrentlyUsedIdentity(cookieStoreId){
-    //   const identities = await browser.contextualIdentities.query({});
-    //   const isMatch = identities.some(
-    //     (identity) => identity.cookieStoreId === cookieStoreId
-    //   );
-    //   return isMatch;
-    // },
+  },
 
-    // // this one might be redundant. Could use get() instead
-    // isInStorage(cookieStoreId){
-    //   const storeKey = this.getContainerStoreKey(cookieStoreId);
-    //   const storageResponse = await this.area.get([storeKey]);
-    //   if (storageResponse && storeKey in storageResponse) {
-    //     return true;
-    //   }
-    //   else{
-    //     false; // TODO: verify api
-    //   }
-    // },
-
+  async isValidCookieStoreId(cookieStoreId){
+    const identities = await browser.contextualIdentities.query({});
+    if(identities.some((identity) => identity.cookieStoreId === cookieStoreId)){
+      return true;
+    }
+    return false;
   },
 
   async getDefaultPage(cookieStoreId) {
-    // TODO: disabled util Utils is implemented
-    // if(Utils.isValidCookieStoreId(cookieStoreId)){
-    //   return await this.storageArea.get(cookieStoreId);
-    // }
-    // return false; // TODO: verify api
-    return await this.storageArea.get(cookieStoreId);
+    try{
+      if(await this.isValidCookieStoreId(cookieStoreId)){
+        return await this.storageArea.get(cookieStoreId);
+      }
+      return false;
+    }catch(e){
+      console.log(e);
+      return false;
+    }
   },
 
+  async setDefaultPage(cookieStoreId, url) {
+    try{
+      if(await this.isValidCookieStoreId(cookieStoreId)){
+        this.storageArea.set(cookieStoreId, url);
+      }
+      // return false; // TODO?: verify api
+    }catch(e){
+      console.log(e);
+    }
+  },
+
+  // currently not used, kept for external messages but could be used to have one backend call.
   async getAllDefaultPages() {
     let identities = await browser.contextualIdentities.query({});
     let defaultUrls = {};
     for (identity of identities){
-      defaultUrls[identity.cookieStoreId] = await this.storageArea.get(identity.cookieStoreId);
+      defaultUrls[identity.cookieStoreId] = await this.getDefaultPage(identity.cookieStoreId);
     }
-    // TODO: currently all identities are set to hardcoded url, so look into the case when url has not been set
-    // in that case, it is currently set to false by the called function.
     return defaultUrls;
   },
 
+  // currently not used, kept for external messages but could be used to have one backend call.
   async loadIdentitiesWithDefaultPages() {
     let identities = await browser.contextualIdentities.query({});
     for (identity of identities){
-      identity.newTabUrl = await this.storageArea.get(identity.cookieStoreId);
+      identity.newTabUrl = await this.getDefaultPage(identity.cookieStoreId);
     }
-    // TODO: currently all identities are set to hardcoded url, so look into the case when url has not been set
-    // in that case, it is currently set to false by the called function.
     return identities;
   },
 
-  // this is hardcoded for initial testing
+  // this is hardcoded for initial testing. This is currently disabled.
   async setDefaultUrls() {
     const hardCodedUrlTest = "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/";
     let identities = await browser.contextualIdentities.query({});
@@ -120,27 +116,18 @@ containerDefaultPages = {
     });
   },
 
-  async removeDefaultPage(cookieStoreId) {
-    // TODO: disabled util Utils is implemented
-    // if(Utils.isValidCookieStoreId(cookieStoreId)){
-    //   return await this.storageArea.get(cookieStoreId);
-    // }
-    // return false; // TODO: verify api
-  },
 
   init() {
-    // TODO: add lister for removing containers
-    // TODO: also check if updating container info changes its cookieId and so needs a listener
+    // TODO: add lister for removing containers; needed for extension storage cleanup
+          // but not needed for loading containers in option.html as they are currently loaded at frontend level
+          // an alternative is to do a cross check on every launch/close and do cleanup then.
+    
+    // TODO: also check if updating container info changes its cookieId and so needs a listener; checked, it does not
 
     // this temporarily hardcoded
-    this.setDefaultUrls();
-    // this.getAllDefaultPages();
+    // this.setDefaultUrls();
 
   }
 };
 
 // containerDefaultPages.init();
-
-// .catch((e) => {
-//   throw e;
-// });
