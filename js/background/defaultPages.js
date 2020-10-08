@@ -3,6 +3,7 @@ containerDefaultPages = {
     area: browser.storage.local,
 
     // These are here to check later if there are inconsistencies between exiting identities and ones in store. i.e garbage collection.
+    // The alternative is to keep track of container removals with listeners which might be easier.
 
     // identityNumStoreKey: "CDP@@_numIdentitiesInStore",
 
@@ -121,11 +122,6 @@ containerDefaultPages = {
     // TODO: add lister for removing containers; needed for extension storage cleanup
           // but not needed for loading containers in option.html as they are currently loaded at frontend level
           // an alternative is to do a cross check on every launch/close and do cleanup then.
-    
-    // TODO: also check if updating container info changes its cookieId and so needs a listener; checked, it does not
-
-    // this temporarily hardcoded
-    // this.setDefaultUrls();
 
   }
 };
