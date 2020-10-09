@@ -49,7 +49,7 @@ const messageHandler = {
       case "getAllDefaultPages":
         response = containerDefaultPages.getAllDefaultPages();
         break;
-      case "loadIdentitiesWithDefaultPages":
+      case "getIdentitiesWithDefaultPages":
         response = containerDefaultPages.loadIdentitiesWithDefaultPages();
         break;
       // setting defaul urls is disabled until url validation is done

@@ -100,7 +100,7 @@ containerDefaultPages = {
   },
 
   // currently not used, kept for external messages but could be used to have one backend call.
-  async loadIdentitiesWithDefaultPages() {
+  async getIdentitiesWithDefaultPages() {
     let identities = await browser.contextualIdentities.query({});
     for (identity of identities){
       identity.newTabUrl = await this.getDefaultPage(identity.cookieStoreId);
