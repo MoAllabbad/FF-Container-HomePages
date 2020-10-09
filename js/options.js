@@ -64,7 +64,8 @@ const Options = {
       const defaultPageForm = document.getElementById(containerFormId);
       const containerInputId = Utils.containerInputId(identity.cookieStoreId);
       // TODO?: additional url validity could be done here
-      defaultPageForm.addEventListener("submit", () => {
+      defaultPageForm.addEventListener("submit", (event) => {
+        event.preventDefault(); // this prevents reloading the page every time user presses enter to input something
         const defaultPageUrl = document.getElementById(containerInputId).value
         this.setContainerDefaultPage(defaultPageUrl, identity.cookieStoreId);
       });
