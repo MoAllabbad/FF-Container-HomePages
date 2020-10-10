@@ -3,6 +3,7 @@ const Options = {
 
   identities: [],
 
+  // send message to background script to set container default URL
   async setContainerDefaultPage(url, cookieStoreId) {
     browser.runtime.sendMessage({
       method: "setDefaultPage",
@@ -11,6 +12,7 @@ const Options = {
     });
   },
 
+  // send message to background script to get container default URL
   async getContainerDefaultPage(cookieStoreId) {
     return await browser.runtime.sendMessage({
     method: "getDefaultPage",
@@ -21,6 +23,8 @@ const Options = {
   async setupContainerTable () {
     const identitiesTable = document.getElementById("identities");
 
+    // fragment is created with element being added to it then it finally added
+    // to the page, to avoid immature page loading.
     const fragment = document.createDocumentFragment();
 
     for (const identity of this.identities){
@@ -29,7 +33,12 @@ const Options = {
       const buttonId = Utils.containerButtonId(identity.cookieStoreId);
 
       const div = document.createElement('div');
-
+      // we are creating several rows, one for each identity. Each row
+      // has two wrappers, one for identity info (having icon and name)
+      // and for the input (having input box and save button).
+      // having the wrappers enables aligning both wrappers as a whole
+      // to most left and right with CSS flex-box.
+      // more css-related info in options.css
       div.innerHTML = Utils.escaped`
         <div class="row">
           <div class="identity-info-wrapper">
@@ -49,10 +58,12 @@ const Options = {
       
       fragment.appendChild(div);
 
+      // add a line beak (Horizontal Rule) after each row except the last
       if (!(this.identities.indexOf(identity) === this.identities.length -1)){
         fragment.appendChild(document.createElement('hr'));
       }
 
+      // get url and show it in input box if it exists
       this.getContainerDefaultPage(identity.cookieStoreId)
         .then((url)=> document.getElementById(urlBoxId).value = url? url : "")
         .catch((err)=> console.log(err));
@@ -72,6 +83,8 @@ const Options = {
       const buttonId = Utils.containerButtonId(identity.cookieStoreId);
       const saveBtnId = document.getElementById(buttonId);
 
+      // Form submission event is fired whenever any of its input children are invoked
+      // here it's fired either by hitting enter in the input box or pressing the save button.
       defaultPageForm.addEventListener("submit", (event) => {
 
         // this prevents reloading the page every time user submits the form
@@ -104,7 +117,6 @@ const Options = {
       await this.setupContainerTable (); // await so listeners are added to existing elements
       this.addUrlInputListeners();
   }
-
 }
 
 Options.init();
