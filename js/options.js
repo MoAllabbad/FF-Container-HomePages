@@ -40,25 +40,30 @@ const Options = {
       // to most left and right with CSS flex-box.
       // more css-related info in options.css
       div.innerHTML = Utils.escaped`
-        <div class="row">
+        <div class="row" aria-label="Row for ${identity.name}">
           <div class="identity-info-wrapper">
             <div class="identity-icon"
               data-identity-icon="${identity.icon}"
               data-identity-color="${identity.color}">
             </div>
-            <span class="identity-name">
-              ${identity.name}
-            </span>
+            <span class="identity-name">${identity.name}</span>
           </div>
           <form class="input-wrapper" id="${formId}">
-            <input type="url" placeholder="https://example.com" id="${urlBoxId}">
-            <input type="submit" class="save-btn" value="Saved" id="${buttonId}">
+            <label for="URL Input Box"></label>
+            <input type="url" aria-label="Input Default URL" 
+              placeholder="Type default URL for container 
+              ${identity.name} then press enter" id="${urlBoxId}">
+            <input type="submit" class="saved-button" 
+              aria-label="save-button"
+              value="Saved" id="${buttonId}">
           </form>
         </div>`;
       
       fragment.appendChild(div);
 
       // add a line beak (Horizontal Rule) after each row except the last
+      // this is not only visual, it also makes it easier to separate content
+      // for accessibility screen readers.
       if (!(this.identities.indexOf(identity) === this.identities.length -1)){
         fragment.appendChild(document.createElement('hr'));
       }
@@ -96,8 +101,8 @@ const Options = {
 
         // update value and style
         saveBtnId.value = "Saved";
-        saveBtnId.classList.remove("save-btn");
-        saveBtnId.classList.add("saved-btn");
+        saveBtnId.classList.remove("save-button");
+        saveBtnId.classList.add("saved-button");
 
       });
 
@@ -106,8 +111,8 @@ const Options = {
       urlBox.addEventListener("keydown", (e) => {
         console.log(e);
         saveBtnId.value = "Save";
-        saveBtnId.classList.remove("saved-btn");
-        saveBtnId.classList.add("save-btn");
+        saveBtnId.classList.remove("saved-button");
+        saveBtnId.classList.add("save-button");
       });
     }
   },
