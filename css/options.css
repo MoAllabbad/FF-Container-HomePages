@@ -126,7 +126,39 @@ label {
   --identity-icon: url("/img/usercontext.svg#fence");
 }
 
-.usercontext-icon {
+/* This is the top flex container which represents one row.
+   Each row has two top level items; the identity info and
+   the input form. The identity info which has the icon and 
+   the name are wrapped in another container so that using 
+   "justify-content: space-between" here moves the whole item
+   to the left. So as long as we have two children. We will 
+   have right and left alignment */
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* The icon and name are wrapped in their own container which
+   is displayed inline preventing wrapping. The flex basis is
+   set with no shrinking which gives it a minimum size. It is
+   set to grow without limit however it is still bound by the
+   overall size of the row minus the other child(ren) in it.
+   But again, since no explicit upper bound is set in .row
+   "overflow: hidden" truncates contents when the parent flex
+   container is 'ideally' filled so the text will grow (i.e
+   if identity name is long) but will still cut at the ideal
+   page size */
+.identity-info-wrapper{
+  display: inline-flex;
+  flex: 1 0 110px;
+  font-size: small;
+  overflow: hidden;
+}  
+
+/* These are the icon parameters. Flex item is set to have 
+   a fixed size since icons have about the same size and 
+   should aesthetically have the same area */
+.identity-icon {
   background-image: var(--identity-icon);
   background-position: center center;
   background-repeat: no-repeat;
@@ -134,40 +166,30 @@ label {
   block-size: 100%;
   fill: var(--identity-icon-color);
   filter: url('/img/filters.svg#fill');
-}
-
-/* size of icon's box. 
-  Icon will be cutoff at these values regardless of its own size above */
-.menu-icon {
-  display: inline;
   height: 25px;
-  inline-size: 25px;
-  margin-inline-end: 4px;
-  margin-inline-start: 16px;
-  position: absolute;
+  flex: 0 0 40px;
+
 }
 
-/* .menu-item-name {
-  display: flex;
-  inline-size: calc(100% - 40px);
-  max-inline-size: 260px;
-} */
-
-/* size of icon-name box.*/
-.menu-text {
+/* These are the identity name parameters.
+   The overflow here is tied with the usage of 
+   the ellipsis. Otherwise, overflow is already
+   truncated by the parent container .identity-info
+   */
+.identity-name {
   line-height: 25px;
-  margin-left: 55px;
+  margin-left: 5px;
   padding-bottom: 5px; 
-  font-size: small; 
-  position: absolute;
+  padding: 3px;
+  font-size: small;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 
 input[type=url],
 input[type=url]:hover,
 input[type=url]:focus{
   margin: .4rem;
-  margin-left: 400px;
   padding: 4px;
   border: 1px solid rgba(249,249,250,0.2);
   border-radius: 1px;
@@ -186,7 +208,7 @@ input[type=url]:focus {
 }
 
 
-/* moz */
+/* These are from Moz., here for reference */
 /*:root {
 	--in-content-page-background: #2A2A2E;
 	--in-content-page-color: rgb(249, 249, 250);

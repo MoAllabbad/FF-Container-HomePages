@@ -25,34 +25,33 @@ const Options = {
 
     for (const identity of this.identities){
       const containerFormId = Utils.containerFormId(identity.cookieStoreId);
-      const containerInputId = Utils.containerInputId(identity.cookieStoreId);
+      const containerUrlBoxId = Utils.containerUrlBoxId(identity.cookieStoreId);
 
-      const tr = document.createElement('tr');
-      // tr.classList.add("menu-item");
-      const td = document.createElement('td');
+      const div = document.createElement('div');
+      const span = document.createElement('span');
 
-      td.innerHTML = Utils.escaped`
-          <div class="menu-item-name">
-            <div class="menu-icon">
-              <div class="usercontext-icon"
-                data-identity-icon="${identity.icon}"
-                data-identity-color="${identity.color}">
-              </div>
+      span.innerHTML = Utils.escaped`
+        <div class="row">
+          <div class="identity-info-wrapper">
+            <div class="identity-icon"
+              data-identity-icon="${identity.icon}"
+              data-identity-color="${identity.color}">
             </div>
-            <span class="menu-text">${identity.name}</span>
-            <span class="menu-box">
-              <form id="${containerFormId}">
-                <input type="url" placeholder="https://example.com" id="${containerInputId}">
-              </form>
+            <span class="identity-name">
+              ${identity.name}
             </span>
-          </div>`;
+          </div>
+          <form id="${containerFormId}">
+            <input type="url" placeholder="https://example.com" id="${containerUrlBoxId}">
+          </form>
+        </div>`;
       
-      tr.appendChild(td);
-      fragment.appendChild(tr);
+      div.appendChild(span);
+      fragment.appendChild(div);
 
       this.getContainerDefaultPage(identity.cookieStoreId)
-        .then((contextUrl)=> document.getElementById(containerInputId).value = contextUrl? contextUrl : "")
-        .catch((contextUrl)=> document.getElementById(containerInputId).value = contextUrl? contextUrl : "error..");
+        .then((contextUrl)=> document.getElementById(containerUrlBoxId).value = contextUrl? contextUrl : "")
+        .catch((contextUrl)=> document.getElementById(containerUrlBoxId).value = contextUrl? contextUrl : "error..");
     }
     identitiesTable.appendChild(fragment);
       // identitiesTable.appendChild(hr);
@@ -62,11 +61,11 @@ const Options = {
     for (const identity of this.identities){
       const containerFormId = Utils.containerFormId(identity.cookieStoreId);
       const defaultPageForm = document.getElementById(containerFormId);
-      const containerInputId = Utils.containerInputId(identity.cookieStoreId);
+      const containerUrlBoxId = Utils.containerUrlBoxId(identity.cookieStoreId);
       // TODO?: additional url validity could be done here
       defaultPageForm.addEventListener("submit", (event) => {
         event.preventDefault(); // this prevents reloading the page every time user presses enter to input something
-        const defaultPageUrl = document.getElementById(containerInputId).value
+        const defaultPageUrl = document.getElementById(containerUrlBoxId).value
         this.setContainerDefaultPage(defaultPageUrl, identity.cookieStoreId);
       });
     }
@@ -86,5 +85,3 @@ const Options = {
 }
 
 Options.init();
-
-
