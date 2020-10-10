@@ -2,7 +2,6 @@
 const Options = {
 
   identities: [],
-  launched: false,
 
   async setContainerDefaultPage(url, cookieStoreId) {
     browser.runtime.sendMessage({
@@ -21,16 +20,17 @@ const Options = {
 
   async setupContainerTable () {
     const identitiesTable = document.getElementById("identities");
+
     const fragment = document.createDocumentFragment();
 
     for (const identity of this.identities){
-      const containerFormId = Utils.containerFormId(identity.cookieStoreId);
-      const containerUrlBoxId = Utils.containerUrlBoxId(identity.cookieStoreId);
+      const formId = Utils.containerFormId(identity.cookieStoreId);
+      const urlBoxId = Utils.containerUrlBoxId(identity.cookieStoreId);
+      const buttonId = Utils.containerButtonId(identity.cookieStoreId);
 
       const div = document.createElement('div');
-      const span = document.createElement('span');
 
-      span.innerHTML = Utils.escaped`
+      div.innerHTML = Utils.escaped`
         <div class="row">
           <div class="identity-info-wrapper">
             <div class="identity-icon"
@@ -41,47 +41,70 @@ const Options = {
               ${identity.name}
             </span>
           </div>
-          <form id="${containerFormId}">
-            <input type="url" placeholder="https://example.com" id="${containerUrlBoxId}">
+          <form class="input-wrapper" id="${formId}">
+            <input type="url" placeholder="https://example.com" id="${urlBoxId}">
+            <input type="submit" class="save-btn" value="Saved" id="${buttonId}">
           </form>
         </div>`;
       
-      div.appendChild(span);
       fragment.appendChild(div);
 
+      if (!(this.identities.indexOf(identity) === this.identities.length -1)){
+        fragment.appendChild(document.createElement('hr'));
+      }
+
       this.getContainerDefaultPage(identity.cookieStoreId)
-        .then((contextUrl)=> document.getElementById(containerUrlBoxId).value = contextUrl? contextUrl : "")
-        .catch((contextUrl)=> document.getElementById(containerUrlBoxId).value = contextUrl? contextUrl : "error..");
+        .then((url)=> document.getElementById(urlBoxId).value = url? url : "")
+        .catch((err)=> console.log(err));
     }
     identitiesTable.appendChild(fragment);
-      // identitiesTable.appendChild(hr);
   },
 
   addUrlInputListeners(){
     for (const identity of this.identities){
-      const containerFormId = Utils.containerFormId(identity.cookieStoreId);
-      const defaultPageForm = document.getElementById(containerFormId);
-      const containerUrlBoxId = Utils.containerUrlBoxId(identity.cookieStoreId);
-      // TODO?: additional url validity could be done here
+
+      const formId = Utils.containerFormId(identity.cookieStoreId);
+      const defaultPageForm = document.getElementById(formId);
+
+      const urlBoxId = Utils.containerUrlBoxId(identity.cookieStoreId);
+      const urlBox = document.getElementById(urlBoxId)
+
+      const buttonId = Utils.containerButtonId(identity.cookieStoreId);
+      const saveBtnId = document.getElementById(buttonId);
+
       defaultPageForm.addEventListener("submit", (event) => {
-        event.preventDefault(); // this prevents reloading the page every time user presses enter to input something
-        const defaultPageUrl = document.getElementById(containerUrlBoxId).value
+
+        // this prevents reloading the page every time user submits the form
+        event.preventDefault(); 
+
+        // save url // TODO?: additional url validity could be done here
+        const defaultPageUrl = document.getElementById(urlBoxId).value;
         this.setContainerDefaultPage(defaultPageUrl, identity.cookieStoreId);
+
+        // update value and style
+        saveBtnId.value = "Saved";
+        saveBtnId.classList.remove("save-btn");
+        saveBtnId.classList.add("saved-btn");
+
+      });
+
+      // replace "Saved" button by "Save" button whenever user types something in the input
+      // box and update class for css-style.
+      urlBox.addEventListener("keydown", (e) => {
+        console.log(e);
+        saveBtnId.value = "Save";
+        saveBtnId.classList.remove("saved-btn");
+        saveBtnId.classList.add("save-btn");
       });
     }
   },
 
   async init(){
-    if (!this.launched){
       this.identities = await browser.contextualIdentities.query({})
       await this.setupContainerTable (); // await so listeners are added to existing elements
       this.addUrlInputListeners();
-
-      this.launched = true; // TODO?: elementary way to prevent reloading
-      // currently still loads every time with white flash
-    }
-
   }
+
 }
 
 Options.init();

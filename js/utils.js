@@ -53,7 +53,17 @@ const Utils = {
    * @param {string} cookieStoreId
    *        A string representing a container/contextualIdentity ID.
    */
-  containerInputId(cookieStoreId){
+  containerUrlBoxId(cookieStoreId){
     return `CDP_URL_${cookieStoreId}`;
+  },
+
+   /**
+   * Returns a string representing the HTML ID of the Button element
+   *
+   * @param {string} cookieStoreId
+   *        A string representing a container/contextualIdentity ID.
+   */
+  containerButtonId(cookieStoreId){
+    return `CDP_BTN_${cookieStoreId}`;
   }
 }

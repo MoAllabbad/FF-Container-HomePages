@@ -126,6 +126,11 @@ label {
   --identity-icon: url("/img/usercontext.svg#fence");
 }
 
+hr{
+  color:  rgba(249,249,250,0.1);
+
+}
+
 /* This is the top flex container which represents one row.
    Each row has two top level items; the identity info and
    the input form. The identity info which has the icon and 
@@ -186,6 +191,10 @@ label {
   text-overflow: ellipsis;
 }
 
+.input-wrapper{
+  display: inline-flex; 
+}
+
 input[type=url],
 input[type=url]:hover,
 input[type=url]:focus{
@@ -207,6 +216,25 @@ input[type=url]:focus {
   background-color:  rgba(249,249,250,0.1);  
 }
 
+input[type=submit] {
+  width: 60px;
+  margin: .4rem;
+  padding: 4px 10px;
+  border: 1px solid rgba(249,249,250,0.2);
+  border-radius: 1px;
+  background-color: transparent;
+  color: #b1b1b3;  
+}
+
+input[type=submit]:hover {
+  background-color:  rgba(171, 171, 184, 0.288);;
+  border-color: rgba(249, 249, 250, 0.288);
+}
+
+input[type=submit]:click {
+  border-color:#45a1ff;
+  background-color:  rgba(249,249,250,0.1);  
+}
 
 /* These are from Moz., here for reference */
 /*:root {
