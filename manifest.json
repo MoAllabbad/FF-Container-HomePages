@@ -12,8 +12,7 @@
   "permissions": [
     "activeTab",
     "contextualIdentities",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "background": {
     "page": "js/background/index.html"
