@@ -53,8 +53,7 @@ const Options = {
             <input type="url" aria-label="Input Default URL" 
               placeholder="Type default URL for container 
               ${identity.name} then press enter" id="${urlBoxId}">
-            <input type="submit" class="saved-button" 
-              aria-label="save-button"
+            <input type="submit" aria-label="save-button"
               value="Saved" id="${buttonId}">
           </form>
         </div>`;
@@ -95,7 +94,7 @@ const Options = {
         // this prevents reloading the page every time user submits the form
         event.preventDefault(); 
 
-        // save url // TODO?: additional url validity could be done here
+        // save url // TODO?: additional url validation could be done here
         const defaultPageUrl = document.getElementById(urlBoxId).value;
         this.setContainerDefaultPage(defaultPageUrl, identity.cookieStoreId);
 
@@ -109,7 +108,7 @@ const Options = {
       // replace "Saved" button by "Save" button whenever user types something in the input
       // box and update class for css-style.
       urlBox.addEventListener("keydown", (e) => {
-        console.log(e);
+        // console.log(e); // info about the key pressed
         saveBtnId.value = "Save";
         saveBtnId.classList.remove("saved-button");
         saveBtnId.classList.add("save-button");
