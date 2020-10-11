@@ -2,34 +2,6 @@ containerDefaultPages = {
   storageArea: {
     area: browser.storage.local,
 
-    // These are here to check later if there are inconsistencies between exiting identities and ones in store. i.e garbage collection.
-    // The alternative is to keep track of container removals with listeners which might be easier.
-
-    // identityNumStoreKey: "CDP@@_numIdentitiesInStore",
-
-    // incrementIdentitiesInStore(){
-    //   // const storeKey = "CDP@@_numIdentitiesInStore";
-    //   let numIdentitiesInStore = await this.area.get([this.identityNumStoreKey]);
-    //   if (!numIdentitiesInStore[storeKey]){ // is this correct? does it return an object?
-    //     numIdentitiesInStore[storeKey] = 1;
-    //   }
-    //   return this.area.set({ //look into the return
-    //     [storeKey]: ++numIdentitiesInStore[storeKey]
-    //   });
-    // },
-
-    // decrementIdentitiesInStore(){
-    //   let numIdentitiesInStore = await this.area.get([this.identityNumStoreKey]);
-    //   if (!numIdentitiesInStore[storeKey]){ // is this correct? does it return an object?
-    //     numIdentitiesInStore[storeKey] = 0;
-    //   }
-    //   else{
-    //     return this.area.set({ //look into the return, and if this (parent) then should an async function
-    //       [storeKey]: --numIdentitiesInStore
-    //     });
-    //   }
-    // },
-
     getContainerStoreKey(cookieStoreId) {
       const storagePrefix = "CDP@@_";
       return `${storagePrefix}${cookieStoreId}`;
@@ -37,8 +9,7 @@ containerDefaultPages = {
 
     async get(cookieStoreId) {
       const storeKey = this.getContainerStoreKey(cookieStoreId);
-      const storageResponse = await this.area.get([storeKey]); // if no key, undefined is returned? https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/get
-
+      const storageResponse = await this.area.get([storeKey]); 
       if (storageResponse && storeKey in storageResponse) {
         return storageResponse[storeKey];
       }
@@ -53,7 +24,8 @@ containerDefaultPages = {
     },
 
     async remove(cookieStoreId) {
-      // TODO?: In case needed
+      const storeKey = this.getContainerStoreKey(cookieStoreId);
+      return this.area.remove(storeKey);
     },
 
   },
@@ -83,7 +55,8 @@ containerDefaultPages = {
       if(await this.isValidCookieStoreId(cookieStoreId)){
         this.storageArea.set(cookieStoreId, url);
       }
-      // return false; // TODO?: verify api
+      // return false; // TODO?: currently no indication if set fails. 
+      // Would also need some work in frontend
     }catch(e){
       console.log(e);
     }
@@ -119,11 +92,11 @@ containerDefaultPages = {
 
 
   init() {
-    // TODO: add lister for removing containers; needed for extension storage cleanup
-          // but not needed for loading containers in option.html as they are currently loaded at frontend level
-          // an alternative is to do a cross check on every launch/close and do cleanup then.
-
+    browser.contextualIdentities.onRemoved.addListener(changeInfo =>
+      this.storageArea.remove(changeInfo.contextualIdentity.cookieStoreId));
+      // This is to prevent permanent memory storage. Could also do cross check but
+      // there yet to exist a case of memory leak, where this is not sufficient.
   }
 };
 
-// containerDefaultPages.init();
+containerDefaultPages.init();
