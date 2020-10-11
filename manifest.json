@@ -21,5 +21,8 @@
       "id": "@container-default-pages",
       "strict_min_version": "67.0"
     }
-  }
+  },
+  "icons": {
+		"1024": "logo.png"
+	}
 }
