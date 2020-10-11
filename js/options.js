@@ -60,9 +60,9 @@ const Options = {
       
       fragment.appendChild(div);
 
-      // add a line beak (Horizontal Rule) after each row except the last
+      // add a line beak (Horizontal Rule) after each row except the last.
       // this is not only visual, it also makes it easier to separate content
-      // for accessibility screen readers.
+      // for accessibility when using screen readers.
       if (!(this.identities.indexOf(identity) === this.identities.length -1)){
         fragment.appendChild(document.createElement('hr'));
       }
@@ -101,7 +101,6 @@ const Options = {
         // update value and style
         saveBtnId.value = "Saved";
         saveBtnId.classList.remove("save-button");
-        saveBtnId.classList.add("saved-button");
 
       });
 
@@ -110,7 +109,6 @@ const Options = {
       urlBox.addEventListener("keydown", (e) => {
         // console.log(e); // info about the key pressed
         saveBtnId.value = "Save";
-        saveBtnId.classList.remove("saved-button");
         saveBtnId.classList.add("save-button");
       });
     }
