@@ -76,6 +76,7 @@ const Options = {
   },
 
   addUrlInputListeners(){
+    
     for (const identity of this.identities){
 
       const formId = Utils.containerFormId(identity.cookieStoreId);
@@ -104,13 +105,13 @@ const Options = {
 
       });
 
-      // replace "Saved" button by "Save" button whenever user types something in the input
-      // box and update class for css-style.
-      urlBox.addEventListener("keydown", (e) => {
-        // console.log(e); // info about the key pressed
+      // whenever user updates in the input box, replace "Saved" button by "Save" button 
+      // and update class for css.
+      urlBox.oninput = (input) => {
+        // console.log(input);
         saveBtnId.value = "Save";
         saveBtnId.classList.add("save-button");
-      });
+      }
     }
   },
 
