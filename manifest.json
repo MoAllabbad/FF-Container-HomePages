@@ -1,6 +1,6 @@
 {
   "name": "Container Default Pages",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 2,
   "incognito": "not_allowed",
   "description": "Specify a default page for each container.",
@@ -23,6 +23,6 @@
     }
   },
   "icons": {
-		"1024": "logo.png"
+		"1024": "img/logo.png"
 	}
 }
