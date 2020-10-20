@@ -1,6 +1,7 @@
 body {
   background: #fff;
   color: #202023;
+  min-height: 250px;
 }
 
 h3 {

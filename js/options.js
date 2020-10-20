@@ -21,6 +21,18 @@ const Options = {
   },
 
   async setupContainerTable () {
+    const body = document.createElement("body");
+    body.innerHTML = Utils.escaped`
+      <h3>Set a default link next to each container:</h3>
+      <div id="identities" 
+          aria-label="Menu for Containers and their input boxes for default URL">
+      </div>
+      <br>
+      <p>
+        <em>Hint</em>: a valid link starts with something like <strong>https://</strong><br>
+      </p>`;
+    document.body = body;
+
     const identitiesTable = document.getElementById("identities");
 
     // fragment is created with element being added to it then it finally added
@@ -115,10 +127,29 @@ const Options = {
     }
   },
 
+  loadNoContainers(){
+    const body = document.createElement("body");
+    body.classList.add("no-containers");
+
+    const h3 = document.createElement("h3");
+    const p = document.createElement("p");
+    h3.innerHTML = "Oops ...";
+    p.innerHTML = "Well, it's empty here. Try creating some containers, then come back here to set their default pages"
+    
+    body.appendChild(h3);
+    body.appendChild(p);
+    document.body = body;
+  },
+
   async init(){
-      this.identities = await browser.contextualIdentities.query({})
+    this.identities = await browser.contextualIdentities.query({})
+    if(this.identities.length === 0){
+      this.loadNoContainers();
+    }
+    else{
       await this.setupContainerTable (); // await so listeners are added to existing elements
       this.addUrlInputListeners();
+    }
   }
 }
 
