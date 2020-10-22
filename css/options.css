@@ -214,7 +214,7 @@ input[type=url]:hover {
 }
 
 input[type=url]:focus {
-  border-color:#45a1ff;
+  border-color:#0a84ff;
   background-color:  rgba(249,249,250,0.1);  
 }
 
@@ -239,7 +239,47 @@ input[class=save-button]{
 
 /* TODO: color update with media query */
 input[class=save-button]:hover{
-  border-color:#45a1ff;
+  border-color:#0a84ff;
+}
+
+@media (prefers-color-scheme: light) {
+
+  hr{
+    color:  rgba(249,249,250,0.3);
+  }
+
+  /* url input box */
+  input[type=url],
+  input[type=url]:hover,
+  input[type=url]:focus{
+    border: 1px solid #737373;
+    background-color: transparent;
+    color: #63637a;
+  }
+
+  input[type=url]:hover {
+    border-color:black;
+  }
+
+  input[type=url]:focus {
+    border-color: #0a84ff;
+    background-color: rgba(249,249,250);  
+  }
+
+  /* save button */
+  input[type=submit] {
+ 
+    background-color: rgb(209, 209, 209, 0.9);
+    color: #08080c;  
+  }
+
+  input[type=submit]:hover {
+    border-color: rgba(18, 18, 27, 0.288);
+  }
+
+  input[class=save-button]{
+    background-color: rgb(160, 159, 159, 0.8);
+  }
 }
 
 /* These are from Moz., here for reference */
