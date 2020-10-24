@@ -23,7 +23,7 @@ const Options = {
   async setupContainerTable () {
     const body = document.createElement("body");
     body.innerHTML = Utils.escaped`
-      <h3>Set a default link next to each container:</h3>
+      <h3>Set a home page next to each container:</h3>
       <div id="identities" 
           aria-label="Menu for Containers and their input boxes for default URL">
       </div>
@@ -134,7 +134,7 @@ const Options = {
     const h3 = document.createElement("h3");
     const p = document.createElement("p");
     h3.innerHTML = "Oops ...";
-    p.innerHTML = "Well, it's empty here. Try creating some containers, then come back here to set their default pages"
+    p.innerHTML = "Well, it's empty here. Try creating some containers, then come back here to set their home pages"
     
     body.appendChild(h3);
     body.appendChild(p);
