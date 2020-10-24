@@ -1,19 +1,19 @@
-# FF-Container-Default-Pages
-This is a Firefox browser extension that lets you specify a default page for each container.
+# FF-Container-HomePages
+This is a Firefox browser extension that lets you specify a  homepage for each container.
 
 Containers allow you to isolate different environments.
 
-One common use case is to have containers for specific sites, sometimes even a single website. So, it would make sense that when you open a tab in that container, it should conveniently default to that specific site. This extension does just that; gives you the option of assigning containers their own pages to default to. If you love containers, you’re gonna love this too!
+One common use case is to have containers for specific sites, sometimes even a single website. So, it would make sense that when you open a tab in that container, it should conveniently default to that specific site. This extension does just that; gives you the option of assigning containers their own homepages. If you love containers, you’re gonna love this too!
 
 ## Usage:
 
-You can download and install the extension from the Mozilla Addon store [here](https://addons.mozilla.org/en-US/firefox/addon/container-default-pages/)
+You can download and install the extension from the Mozilla Addon store [here](https://addons.mozilla.org/en-US/firefox/addon/container-homepages/)
 
-To set default pages, go to the extension’s options page, which should look similar to this screenshot except it will list *your* containers instead.
+To set a homepage, go to the extension’s options page, which should look similar to this screenshot except it will list *your* containers instead.
 
 ![options page!](img/options.png)
 
-You see a list of all your existing containers along with URL input boxes for default pages. Just type your URL next to a container and press “Save”. Now, every time you open a new tap in that container, it will automatically open the URL to that website.
+You see a list of all your existing containers along with URL input boxes for homepages. Just type your URL next to a container and press “Save”. Now, every time you open a new tap in that container, it will automatically open the URL to that website.
 
 You may have been using the [MAC (Multi Account Containers)](https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/) extension by Firefox. One thing it does is allow you to assign a website to always open in a specific container. This, on the other hand, gives the extra feature of allowing you to assign a container itself to a default website. This extension is compatible with MAC and other container extensions. You can also use it without other extensions. Only thing you need is to have containers enabled.
 
