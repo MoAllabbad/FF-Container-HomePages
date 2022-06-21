@@ -1,6 +1,6 @@
 {
   "name": "Container Home Pages",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "manifest_version": 2,
   "incognito": "not_allowed",
   "description": "Specify a default page for each container.",

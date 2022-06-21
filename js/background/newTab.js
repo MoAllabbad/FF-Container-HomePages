@@ -12,9 +12,9 @@ const newTab = {
     // but arguably that's not a real use case.
 
     // this used to only check the openerTabId and worked for most cases, but caused a conflict with the MAC ext. issue #1
-    // so checking the URL was added which requires the tab permission. 
+    // so checking the URL and title were added, which requires the tab permission. 
     // Checking the URL alone should be enough but keeping the openerTabId check should not cause issues.
-    let isNew = tab.openerTabId === undefined && (tab.url === "about:newtab" || tab.url === "about:blank");
+    let isNew = tab.openerTabId === undefined && (tab.url === "about:newtab" || tab.url === "about:blank") && tab.title === "New Tab";
     return isNew;
   },
   async onCreated(tab){
