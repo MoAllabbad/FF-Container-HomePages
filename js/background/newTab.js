@@ -10,15 +10,11 @@ const newTab = {
     // There yet to exist a legitimate case where checking openerTabId does not work. 
     // known issue: this won't work in case of opening "about:newtab" link as "Open in New Tab"
     // but arguably that's not a real use case.
-    let isNew = tab.openerTabId === undefined;
-    // TODO?: is there a case where a newly created tab is new but does not have a parent tab?!
-    // if (tab.status == "complete" &&
-    //    !(tab.title == "New Tab") || 
-    //    (tab.url == "about:newtab" &&
-    //     tab.url == "about:blank")){
-    //       isNew = false;
-    // }
-    // TODO?: may add onUpdated listener here for edge case
+
+    // this used to only check the openerTabId and worked for most cases, but caused a conflict with the MAC ext. issue #1
+    // so checking the URL was added which requires the tab permission. 
+    // Checking the URL alone should be enough but keeping the openerTabId check should not cause issues.
+    let isNew = tab.openerTabId === undefined && (tab.url === "about:newtab" || tab.url === "about:blank");
     return isNew;
   },
   async onCreated(tab){
