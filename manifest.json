@@ -1,6 +1,6 @@
 {
   "name": "Container Home Pages",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "manifest_version": 2,
   "incognito": "not_allowed",
   "description": "Specify a default page for each container.",
@@ -12,7 +12,8 @@
   "permissions": [
     "contextualIdentities",
     "storage",
-    "cookies"
+    "cookies",
+    "tabs"
   ],
   "background": {
     "page": "js/background/index.html"
