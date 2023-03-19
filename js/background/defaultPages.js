@@ -35,6 +35,9 @@ containerDefaultPages = {
     if(identities.some((identity) => identity.cookieStoreId === cookieStoreId)){
       return true;
     }
+    if (cookieStoreId == "firefox-default"){
+      return true;
+    }
     return false;
   },
 

@@ -143,13 +143,11 @@ const Options = {
 
   async init(){
     this.identities = await browser.contextualIdentities.query({})
-    if(this.identities.length === 0){
-      this.loadNoContainers();
-    }
-    else{
-      await this.setupContainerTable (); // await so listeners are added to existing elements
-      this.addUrlInputListeners();
-    }
+    noContainter = { name: "No Container (if no container is selected)", cookieStoreId: "firefox-default"},
+    this.identities.push(noContainter)
+
+    await this.setupContainerTable (); // await so listeners are added to existing elements
+    this.addUrlInputListeners();
   }
 }
 
