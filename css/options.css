@@ -75,6 +75,11 @@ label {
   --identity-icon-color: #af51f5;
 }
 
+[data-identity-color="transparent"] {
+  /* --identity-tab-color: #ae51f500;
+  --identity-icon-color: #ae51f500; */
+}
+
 [data-identity-icon="fingerprint"] {
   --identity-icon: url("/img/usercontext.svg#fingerprint");
 }
@@ -125,6 +130,10 @@ label {
 
 [data-identity-icon="fence"] {
   --identity-icon: url("/img/usercontext.svg#fence");
+}
+
+[data-identity-icon="firefox"] {
+  --identity-icon: url("/img/Firefox_brand_logo,_2019.svg");
 }
 
 hr{

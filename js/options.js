@@ -127,26 +127,27 @@ const Options = {
     }
   },
 
-  loadNoContainers(){
-    const body = document.createElement("body");
-    body.classList.add("no-containers");
+  loadNoContainersMessage(){
+    document.body.classList.add("no-containers");
 
-    const h3 = document.createElement("h3");
     const p = document.createElement("p");
-    h3.innerHTML = "Oops ...";
-    p.innerHTML = "Well, it's empty here. Try creating some containers, then come back here to set their home pages"
+    p.innerHTML = "By the way, it seems that you don't have containers but, you can still assign a homepage to regular new tabs. " +
+                  "To learn more about containers and how to use them, please visit official website: https://support.mozilla.org/en-US/kb/how-use-firefox-containers"
     
-    body.appendChild(h3);
-    body.appendChild(p);
-    document.body = body;
+    document.body.appendChild(p);
   },
 
   async init(){
     this.identities = await browser.contextualIdentities.query({})
-    noContainter = { name: "No Container (if no container is selected)", cookieStoreId: "firefox-default"},
-    this.identities.push(noContainter)
+    noContainter = { name: "Default (no container)", icon: "firefox", color: "red", iconUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Firefox_brand_logo%2C_2019.svg", cookieStoreId: "firefox-default"},
+    this.identities = [noContainter, ...this.identities]
 
     await this.setupContainerTable (); // await so listeners are added to existing elements
+
+    if ((await browser.contextualIdentities.query({})).length == 0){
+      this.loadNoContainersMessage()
+    }
+    
     this.addUrlInputListeners();
   }
 }
